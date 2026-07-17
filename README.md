@@ -46,7 +46,11 @@ The backbone architecture (e.g., ResNet-18 or 3D CNNs) predicts two continuous q
 Due to severe class imbalance (where severe M and X class flares represent <1% of the distribution), marginal calibration yields unstable coverage. The algorithm computes class-specific non-conformity scores $s_i = \max(L(X_i) - Y_i, Y_i - U(X_i))$ to establish conditional quantile correction factors $\hat{q}_k$ for each class $k \in \{0, 1, 2, 3, 4\}$.
 
 ### Step 3: Boundary-Based Ordinal Mapping
-The calibrated continuous interval is defined as $\hat{I}(X) = [L(X) - \hat{q}_{y_{pred}}, U(X) + \hat{q}_{y_{pred}}]$. Given predefined continuous domain thresholds $\{\tau_0, \tau_1, \dots, \tau_K\}$, a discrete ordinal class $k$ is included in the final prediction set $C(X)$ if and only if its continuous domain bin $[\tau_{k-1}, \tau_k)$ overlaps with the calibrated interval $\hat{I}(X)$. This continuous-to-discrete mapping mathematically guarantees zero disjoint gaps.
+The calibrated continuous interval is defined as:
+
+$$ \hat{I}(X) = [L(X) - \hat{q}_{y_{pred}}, U(X) + \hat{q}_{y_{pred}}] $$
+
+Given predefined continuous domain thresholds $\{\tau_0, \tau_1, \dots, \tau_K\}$, a discrete ordinal class $k$ is included in the final prediction set $C(X)$ if and only if its continuous domain bin $[\tau_{k-1}, \tau_k)$ overlaps with the calibrated interval $\hat{I}(X)$. This continuous-to-discrete mapping mathematically guarantees zero disjoint gaps.
 
 ## Evaluation Metrics
 
