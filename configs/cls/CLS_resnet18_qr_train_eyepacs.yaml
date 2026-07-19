@@ -10,13 +10,14 @@ hydra:
 
 experiment:
   task: regression
-  ckpt_file_name: resnet18_qr_retinamnist
+  ckpt_file_name: resnet18_qr_eyepacs
 
 data:
-  repo: retinamnist
-  num_workers: 4
+  repo: eyepacs
+  num_workers: 0
   batch_size: 32
   pin_memory: true
+  label_type: continuous
 
 model:
   save_ckpt_path: ./assets/checkpoints/qr/
@@ -30,6 +31,7 @@ model:
     in_channels: 3
     time_steps: 1
     p_drop: 0.5
+    num_classes: 1
     
   loss:
     type: pinball
@@ -64,9 +66,9 @@ trainer:
 wandb:
   save_dir: ./assets
   entity: gsu-dmlab
-  project: uncertainty-medmnist_classification
+  project: uncertainty-eyepacs-classification
   log_model: false
-  notes: Resnet18 backbone on MedMNIST (QR)
+  notes: Resnet18 backbone on EyePACS (QR)
   offline: false
   save_code: false
-  tag: ["resnet18", "qr", "retinamnist"]
+  tag: ["resnet18", "qr", "eyepacs"]

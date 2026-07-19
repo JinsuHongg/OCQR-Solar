@@ -1,3 +1,4 @@
+seed: 42
 hydra:
   run:
     dir: .
@@ -22,7 +23,7 @@ uc:
   significance_level: 0.1
   methods: [oaps, min_cps, min_rcps, copoc, risk_control]
   num_classes: 5
-  class_wise: false
+  class_wise: true
   class_mapping: {"0": 0, "1": 1, "2": 2, "3": 3, "4": 4}
   
 trainer:

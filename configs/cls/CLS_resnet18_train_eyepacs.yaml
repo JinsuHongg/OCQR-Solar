@@ -9,30 +9,31 @@ hydra:
     dir: .
 
 experiment:
-  task: regression
-  ckpt_file_name: resnet18_qr_retinamnist
+  task: classification
+  ckpt_file_name: resnet18_cls_eyepacs
 
 data:
-  repo: retinamnist
-  num_workers: 4
+  repo: eyepacs
+  num_workers: 0
   batch_size: 32
   pin_memory: true
+  label_type: ordinal
 
 model:
-  save_ckpt_path: ./assets/checkpoints/qr/
+  save_ckpt_path: ./assets/checkpoints/cls/
   ckpt: null
-  module_type: qr
-  qr:
-    quantiles: [0.05, 0.5, 0.95]
+  module_type: cls
   
   type: resnet18
   resnet18:
     in_channels: 3
     time_steps: 1
+    num_classes: 5
     p_drop: 0.5
     
   loss:
-    type: pinball
+    type: cross_entropy
+    class_weights: [1.0, 1.0, 1.0, 1.0, 1.0]
 
 optimizer:
   type: adamw
@@ -64,9 +65,9 @@ trainer:
 wandb:
   save_dir: ./assets
   entity: gsu-dmlab
-  project: uncertainty-medmnist_classification
+  project: uncertainty-eyepacs-classification
   log_model: false
-  notes: Resnet18 backbone on MedMNIST (QR)
+  notes: Resnet18 backbone on EyePACS
   offline: false
   save_code: false
-  tag: ["resnet18", "qr", "retinamnist"]
+  tag: ["resnet18_cls", "cls", "eyepacs"]

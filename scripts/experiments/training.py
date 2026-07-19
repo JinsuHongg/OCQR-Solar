@@ -5,6 +5,7 @@ from loguru import logger as lgr_logger
 from omegaconf import OmegaConf
 
 import torch
+import lightning as L
 from lightning.pytorch import Trainer
 
 from ocqr_solar.datamodules import (
@@ -70,6 +71,20 @@ def train(cfg):
         # Use continuous label for QR models to predict actual ages
         label_type = 'continuous' if cfg.model.module_type == 'qr' else 'ordinal'
         datamodule = AdienceDataModule(batch_size=cfg.data.batch_size, num_workers=cfg.data.num_workers, label_type=label_type)
+    elif cfg.data.repo == "utkface":
+        from ocqr_solar.datamodules.utkface import UTKFaceDataModule
+        datamodule = UTKFaceDataModule(
+            batch_size=cfg.data.batch_size,
+            num_workers=cfg.data.num_workers,
+            label_type=getattr(cfg.data, "label_type", "ordinal"),
+        )
+    elif cfg.data.repo == "eyepacs":
+        from ocqr_solar.datamodules.eyepacs import EyePACSDataModule
+        datamodule = EyePACSDataModule(
+            batch_size=cfg.data.batch_size,
+            num_workers=cfg.data.num_workers,
+            label_type=getattr(cfg.data, "label_type", "ordinal"),
+        )
     else:
         datamodule = FlareSuryaBenchDataModule(cfg=cfg)
 

@@ -1,3 +1,4 @@
+seed: 42
 defaults:
   - override hydra/job_logging: disabled
   - override hydra/hydra_logging: disabled
@@ -16,6 +17,7 @@ data:
   num_workers: 4
   batch_size: 32
   pin_memory: true
+  label_type: continuous
 
 model:
   save_ckpt_path: ./assets/checkpoints/qr/

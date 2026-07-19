@@ -40,9 +40,9 @@ class AdienceDataset(Dataset):
         label = row['label']
         
         if self.label_type == 'continuous':
-            target = torch.tensor(float(label), dtype=torch.float32)
+            target = torch.tensor(float(row['continuous_label']), dtype=torch.float32)
         else:
-            target = torch.tensor(label, dtype=torch.long)
+            target = torch.tensor(row['label'], dtype=torch.long)
             
         # Add dummy time dimension (C, T, H, W) to match model expectations
         image = image.unsqueeze(1)

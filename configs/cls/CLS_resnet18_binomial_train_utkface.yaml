@@ -9,30 +9,28 @@ hydra:
     dir: .
 
 experiment:
-  task: regression
-  ckpt_file_name: resnet18_qr_retinamnist
+  task: classification
+  ckpt_file_name: resnet18_binomial_utkface
 
 data:
-  repo: retinamnist
+  repo: utkface
   num_workers: 4
   batch_size: 32
   pin_memory: true
 
 model:
-  save_ckpt_path: ./assets/checkpoints/qr/
+  save_ckpt_path: ./assets/checkpoints/cls/
   ckpt: null
-  module_type: qr
-  qr:
-    quantiles: [0.05, 0.5, 0.95]
-  
-  type: resnet18
-  resnet18:
+  module_type: cls
+  type: resnet18_binomial
+  resnet18_binomial:
     in_channels: 3
     time_steps: 1
     p_drop: 0.5
+    num_classes: 5
     
   loss:
-    type: pinball
+    type: cross_entropy
 
 optimizer:
   type: adamw
@@ -66,7 +64,7 @@ wandb:
   entity: gsu-dmlab
   project: uncertainty-medmnist_classification
   log_model: false
-  notes: Resnet18 backbone on MedMNIST (QR)
+  notes: Resnet18 Binomial backbone on MedMNIST
   offline: false
   save_code: false
-  tag: ["resnet18", "qr", "retinamnist"]
+  tag: ["resnet18_binomial", "cls", "utkface"]

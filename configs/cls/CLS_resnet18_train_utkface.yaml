@@ -9,30 +9,30 @@ hydra:
     dir: .
 
 experiment:
-  task: regression
-  ckpt_file_name: resnet18_qr_retinamnist
+  task: classification
+  ckpt_file_name: resnet18_cls_utkface
 
 data:
-  repo: retinamnist
+  repo: utkface
   num_workers: 4
-  batch_size: 32
+  batch_size: 128
   pin_memory: true
 
 model:
-  save_ckpt_path: ./assets/checkpoints/qr/
+  save_ckpt_path: ./assets/checkpoints/cls/
   ckpt: null
-  module_type: qr
-  qr:
-    quantiles: [0.05, 0.5, 0.95]
+  module_type: cls
   
   type: resnet18
   resnet18:
     in_channels: 3
     time_steps: 1
+    num_classes: 5
     p_drop: 0.5
     
   loss:
-    type: pinball
+    type: cross_entropy
+    class_weights: [1.0, 1.0, 1.0, 1.0, 1.0]
 
 optimizer:
   type: adamw
@@ -54,7 +54,7 @@ trainer:
   accelerator: gpu
   devices: 1
   num_nodes: 1
-  max_epochs: 100
+  max_epochs: 10
   precision: 32
   log_every_n_steps: 10
   limit_train_batches: null
@@ -64,9 +64,9 @@ trainer:
 wandb:
   save_dir: ./assets
   entity: gsu-dmlab
-  project: uncertainty-medmnist_classification
+  project: uncertainty-medmnist-classification
   log_model: false
-  notes: Resnet18 backbone on MedMNIST (QR)
+  notes: Resnet18 backbone on MedMNIST
   offline: false
   save_code: false
-  tag: ["resnet18", "qr", "retinamnist"]
+  tag: ["resnet18_cls", "cls", "utkface"]

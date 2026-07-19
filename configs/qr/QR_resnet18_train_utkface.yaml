@@ -10,13 +10,14 @@ hydra:
 
 experiment:
   task: regression
-  ckpt_file_name: resnet18_qr_retinamnist
+  ckpt_file_name: resnet18_qr_utkface
 
 data:
-  repo: retinamnist
+  repo: utkface
   num_workers: 4
   batch_size: 32
   pin_memory: true
+  label_type: continuous
 
 model:
   save_ckpt_path: ./assets/checkpoints/qr/
@@ -30,6 +31,7 @@ model:
     in_channels: 3
     time_steps: 1
     p_drop: 0.5
+    num_classes: 5
     
   loss:
     type: pinball
@@ -69,4 +71,4 @@ wandb:
   notes: Resnet18 backbone on MedMNIST (QR)
   offline: false
   save_code: false
-  tag: ["resnet18", "qr", "retinamnist"]
+  tag: ["resnet18", "qr", "utkface"]

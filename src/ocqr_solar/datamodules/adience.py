@@ -10,6 +10,16 @@ from loguru import logger as lgr_logger
 
 VALID_AGES = ['(0, 2)', '(4, 6)', '(8, 12)', '(15, 20)', '(25, 32)', '(38, 43)', '(48, 53)', '(60, 100)']
 AGE_TO_ORDINAL = {k: v for v, k in enumerate(VALID_AGES)}
+AGE_TO_CONTINUOUS = {
+    '(0, 2)': 1.0,
+    '(4, 6)': 5.0,
+    '(8, 12)': 10.0,
+    '(15, 20)': 17.5,
+    '(25, 32)': 28.5,
+    '(38, 43)': 40.5,
+    '(48, 53)': 50.5,
+    '(60, 100)': 65.0
+}
 
 class AdienceDataModule(L.LightningDataModule):
     def __init__(
@@ -64,8 +74,9 @@ class AdienceDataModule(L.LightningDataModule):
             lambda r: f"faces/{r['user_id']}/coarse_tilt_aligned_face.{r['face_id']}.{r['original_image']}", axis=1
         )
         
-        # Map label to ordinal integer
+        # Map label to ordinal integer and continuous float
         full_df['label'] = full_df['age'].map(AGE_TO_ORDINAL)
+        full_df['continuous_label'] = full_df['age'].map(AGE_TO_CONTINUOUS)
         
         # Drop rows where image file does not actually exist on disk to prevent crash
         valid_rows = []

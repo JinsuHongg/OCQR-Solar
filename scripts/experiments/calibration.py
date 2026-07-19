@@ -76,11 +76,18 @@ def save_batch_to_csv(file_path, batch_dict, header_written=False):
     version_base=None,
 )
 def run_uc_cal(cfg):
+    L.seed_everything(cfg.get("seed", 42), workers=True)
     methods = cfg.uc.get("methods", ["mcd", "cp", "cqr", "lp"])
 
     if cfg.data.get("repo") == "retinamnist":
         from ocqr_solar.datamodules.retina_mnist import RetinaMNISTDataModule
         datamodule = RetinaMNISTDataModule(data_dir="/mnt/storage/medmnist", batch_size=cfg.data.batch_size, num_workers=cfg.data.num_workers)
+    elif cfg.data.get("repo") == "utkface":
+        from ocqr_solar.datamodules.utkface import UTKFaceDataModule
+        datamodule = UTKFaceDataModule(batch_size=cfg.data.batch_size, num_workers=cfg.data.num_workers, thresholds=cfg.uc.thresholds, label_type=cfg.data.label_type)
+    elif cfg.data.get("repo") == "eyepacs":
+        from ocqr_solar.datamodules.eyepacs import EyePACSDataModule
+        datamodule = EyePACSDataModule(batch_size=cfg.data.batch_size, num_workers=cfg.data.num_workers, label_type=cfg.data.get("label_type", "ordinal"))
     elif cfg.data.get("repo") == "adience":
         from ocqr_solar.datamodules.adience import AdienceDataModule
         datamodule = AdienceDataModule(batch_size=cfg.data.batch_size, num_workers=cfg.data.num_workers, label_type='continuous')
@@ -164,6 +171,7 @@ def run_uc_cal(cfg):
             alpha=alpha,
             lower_idx=cfg.uc.cqr.lower_idx,
             upper_idx=cfg.uc.cqr.upper_idx,
+            class_wise=cfg.uc.get("class_wise", False),
         ).to(device)
 
     if "lp" in methods and mcd is not None:

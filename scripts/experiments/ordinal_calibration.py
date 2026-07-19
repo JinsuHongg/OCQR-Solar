@@ -74,6 +74,7 @@ def save_batch_to_csv(file_path, batch_dict, header_written=False):
     version_base=None,
 )
 def run_ordinal_uc_cal(cfg):
+    L.seed_everything(cfg.get("seed", 42), workers=True)
     methods = cfg.uc.get("methods", ["oaps", "min_cps", "min_rcps", "copoc", "risk_control"])
     if cfg.data.repo == "retinamnist":
         from ocqr_solar.datamodules.retina_mnist import RetinaMNISTDataModule
@@ -81,6 +82,12 @@ def run_ordinal_uc_cal(cfg):
     elif cfg.data.repo == "adience":
         from ocqr_solar.datamodules.adience import AdienceDataModule
         datamodule = AdienceDataModule(batch_size=cfg.data.batch_size, num_workers=cfg.data.num_workers, label_type='ordinal')
+    elif cfg.data.repo == "utkface":
+        from ocqr_solar.datamodules.utkface import UTKFaceDataModule
+        datamodule = UTKFaceDataModule(batch_size=cfg.data.batch_size, num_workers=cfg.data.num_workers, label_type='ordinal')
+    elif cfg.data.repo == "eyepacs":
+        from ocqr_solar.datamodules.eyepacs import EyePACSDataModule
+        datamodule = EyePACSDataModule(batch_size=cfg.data.batch_size, num_workers=cfg.data.num_workers, label_type='ordinal')
     else:
         datamodule = FlareSuryaBenchDataModule(cfg=cfg)
     datamodule.setup(stage="calibrate")
